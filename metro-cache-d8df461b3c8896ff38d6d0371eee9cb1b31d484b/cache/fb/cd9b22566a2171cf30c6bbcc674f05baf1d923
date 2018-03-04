@@ -53,12 +53,36 @@ __d(function (global, require, module, exports, _dependencyMap) {
       var _this = _possibleConstructorReturn(this, (Test.__proto__ || Object.getPrototypeOf(Test)).call(this, props));
 
       _this.state = {
-        text: ''
+        user: '',
+        message: ''
       };
       return _this;
     }
 
     _createClass(Test, [{
+      key: "submitForm",
+      value: function submitForm(user, message) {
+        if (user == '' && message == '') {
+          _reactNative.Alert.alert("Failure: One or more fields are empty.");
+        } else {
+          var url = "http://ec2-34-238-119-166.compute-1.amazonaws.com/message";
+          var result = fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              'user': user,
+              'message': message
+            })
+          }).then(console.log("hi")).catch(function (e) {
+            throw e;
+          });
+
+          _reactNative.Alert.alert("Success: Your message " + '"' + this.state.message + '"' + " has been entered into the database.");
+        }
+      }
+    }, {
       key: "render",
       value: function render() {
         var _this2 = this;
@@ -66,59 +90,71 @@ __d(function (global, require, module, exports, _dependencyMap) {
         return _react3.default.createElement(
           _reactNative.View,
           {
-            style: {
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#FFFFFF'
-            },
+            style: styles.container,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 12
+              lineNumber: 61
             }
           },
-          _react3.default.createElement(_reactNative.TextInput, {
-            style: {
-              height: 60
+          _react3.default.createElement(
+            _reactNative.Text,
+            {
+              style: {
+                fontSize: 20,
+                fontWeight: 'bold',
+                width: 200,
+                textAlign: 'center'
+              },
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 62
+              }
             },
-            placeholder: "Enter a message here",
-            onChangeText: function onChangeText(text) {
+            "Send a message to the database"
+          ),
+          _react3.default.createElement(_reactNative.TextInput, {
+            style: styles.user,
+            placeholder: "Name",
+            onChangeText: function onChangeText(user) {
               return _this2.setState({
-                text: text
+                user: user
               });
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 18
+              lineNumber: 63
+            }
+          }),
+          _react3.default.createElement(_reactNative.TextInput, {
+            style: styles.message,
+            placeholder: "Message",
+            onChangeText: function onChangeText(message) {
+              return _this2.setState({
+                message: message
+              });
+            },
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 68
             }
           }),
           _react3.default.createElement(
             _reactNative.View,
             {
-              style: {
-                borderRadius: 10,
-                padding: 3,
-                shadowColor: '#000000',
-                shadowOffset: {
-                  width: 0,
-                  height: 1
-                },
-                shadowRadius: 5,
-                shadowOpacity: 0.15
-              },
+              style: styles.button,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 25
+                lineNumber: 73
               }
             },
             _react3.default.createElement(_reactNative.Button, {
               onPress: function onPress() {
-                _reactNative.Alert.alert("Your message " + '"' + _this2.state.text + '"' + " has been entered into the database");
+                _this2.submitForm(_this2.state.user, _this2.state.message);
               },
               title: "Enter",
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 36
+                lineNumber: 74
               }
             })
           )
@@ -130,6 +166,46 @@ __d(function (global, require, module, exports, _dependencyMap) {
   }(_react2.Component));
 
   exports.default = Test;
+
+  var styles = _reactNative.StyleSheet.create({
+    container: {
+      marginTop: 100,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#FFFFFF'
+    },
+    user: {
+      height: 40,
+      width: 200,
+      backgroundColor: '#f6f6f6',
+      paddingLeft: 10,
+      paddingRight: 10,
+      marginTop: 15,
+      marginBottom: 5
+    },
+    message: {
+      height: 40,
+      width: 200,
+      backgroundColor: '#f6f6f6',
+      paddingLeft: 10,
+      paddingRight: 10,
+      marginTop: 5,
+      marginBottom: 10
+    },
+    button: {
+      borderRadius: 10,
+      padding: 3,
+      shadowColor: '#000000',
+      shadowOffset: {
+        width: 0,
+        height: 1
+      },
+      shadowRadius: 5,
+      shadowOpacity: 0.15,
+      marginTop: 10
+    }
+  });
 
   _reactNative.AppRegistry.registerComponent('client', function () {
     return Test;
